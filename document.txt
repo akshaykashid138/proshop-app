@@ -1,0 +1,262 @@
+
+
+
+2
+2)
+React-bootstrap setup
+    We create two folders for component one is for component like header footer and all this things
+    and another one is screen for home screen, product screeen, profile screen etc
+
+    we use react-bootrstap and bootswatch theme for our project so go to bootswatch website choose theme we choose lux, download it add
+    it to src folder and import it in index js
+    import './bootstrap.min.css'
+
+
+3 Backend
+2)
+Serving products
+    for this section we are fetching product from array for a while after we will get products from mongodb.
+    so for this we created backend folder and add product.js file which contains array of product detail.
+
+    we want a package file outside the frontend and backend so outside those two folders i.e at root folder we run commond npm init
+    install express this also in root folder
+
+    create server by importing express and all
+    then imported products in server file then writes API for sending data
+
+3)
+Fetching products from react useEffect
+    in frontend install axios
+    import it 
+    impot useState and useEffect
+    const [products,setProducts]=useState([])
+
+    then we implement useEffect method
+     useEffect(()=>{
+        const fetchProducts=async ()=>{
+                const {data}=await axios.get('/api/products')
+
+                setProducts(data)
+        }
+        fetchProducts()
+    },[])
+
+    we implement fetchProducts and then call it
+
+    It gives cors error so in frontend in package.json we add proxy to backend PORT
+
+4)
+"scripts": {
+    "start": "node backend/server", //server file is inside backend folder
+    "server": "nodemon backend/server", 
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+
+for running frontend and backend concurrently
+npm run dev
+
+5)
+Environment Variable
+we use package .env
+install it, then require it and call config() method
+create file .env
+
+we can set values in .env file
+    NODE_ENV = development
+    PORT=5000
+
+and we can use it in server.js file
+    import dotenv from 'dotenv'
+
+    dotenv.config()
+
+    and we can use it like
+    const PORT=process.env.PORT || 5000
+
+6)
+ES modules in node js
+we use require() in common js
+const express=require("express")
+
+and we use import in ES modules
+import express from 'express'
+
+for that we have to use type=module in root package.json file
+"type": "module",
+
+*** when running frontend and backend at different port and when we send request from frontend to backend it gives CORS error and for
+    that we have to add "proxy":"127.0.0.1:port" in react package.json file we have to use proxy
+
+
+---------------------------------------------------------------------------------------------------------------------------
+#3 Getting started with mongodb
+
+1)
+mongodb setup create cluster in atlas
+open mango atlas website create cluster create database 
+add the url string in .env file
+
+2)
+Connecting to the database
+we create config folder and inside that we create db.js file
+for that we create asynchronous function and write code for Connecting mongodb
+imported it in server.js and call the mongoDB function
+
+
+3)
+Modelling data
+we create schema for user and at last we give timestamp it is for createdat and all this things
+in product schema we give reference to user because we want to know to that which user adds the product.
+so we user type mongoose.Schema.Types.ObjectId,
+and give reference to the User collection
+
+create product schema, user schema and order schema
+we addedd all the field there
+
+4)
+Preparing sample data
+we created sample data of users and products
+installed bcryptjs and use it in users data to hash password
+
+5)
+created two .js file for users and products all the fields adds in those files and 
+created seeder file in that file wrote code to import the data
+and for run this file write scripts in package.json file.
+
+6)
+Fetching products from database
+create seperate routes folder and in that folder we weite partcular routes
+we install express-async-handler package for handling exception rather than writing code in try catch block this is a middleware
+
+7)
+
+
+
+-----------------------------------------------------------------------------
+5) Implementing Redux for state management
+1)
+An overview of Redux
+    Redux is for application or global state.an example of that would be our products because our products we're going to want to use and multiple.
+    the way that state is changed is through reducers or reduce or functions.And it basically just functions that accept actions.
+    And they're responsible for manipulating and passing the state down to components.
+
+     actions are just objects that represent the intention to change a piece of state.
+     We also have action creators, which are functions that will dispatch or fire off those actions
+
+
+     To give you an example, we may have an action creator function called Get Products.
+     And in that action creator, we make a feature request to the back end to get data using Axios or the
+     Fetch API or whatever.
+     And then we get that data back and then we dispatch an action to the reducer and we attach a payload to it.
+     And that payload will have the fetch data.
+     Now in the reducer, we can assign that payload data to the state and we can pass it down to any components
+
+2)
+Create a Redux store
+    because this gives us an overall picture of our Reduc store
+    with all of our stake and any state changes from component to component.
+
+    install redux in frontend
+    npm i redux react-redux redux-thunk redux-devtools-extension
+
+    Now there's another extension called Redux Thunk, which basically allows us to in our action creators.
+    It allows us to make asynchronous requests because we're going to have to talk to our server from those action creators.
+    It's basically a piece of middleware called Thunk.
+
+    create store.js file in src
+    import {createStore, combineReducers,applyMiddleware} from 'redux'
+    import thunk from 'redux-thunk'
+    import {composeWithDevTools} from 'redux-devtools-extension'
+
+    created store and exported it 
+
+    in index.js Provider is imported from react-redux and store is from store file
+    used it 
+
+3)
+Product list Reducer and actions
+    create reducers folder under src
+    created reducers for productList and we have to export it and use it in store 
+    The reducer(productListReducer) has initial state and action
+    in store in productList we have state of product
+    keep all action types in constants
+    so create constants in seperate file and export from that file
+
+    in Action we used asynchronous call and there thunk is used
+    //here the hhunk comes in picture here we made asynchronous call here we used function inside another function
+
+
+    process---->
+    first created store
+    reducers
+    constants
+    actions
+
+    reducers are imported in store
+
+4)
+Bringing Redux state into home screen
+
+    now we dont made api call in home screen rather than we made api call in action
+    so we have to import action in homescreen and call it in useEffect method
+    we dont need axios and local state in homescreen component
+    we need to import useDispatch and useSelector from 'react-redux'
+
+    *****
+    when we dispatch action from component it goes to action.js file if it success then we pass  data to payload and in reducer that
+    payload get put in products
+
+5)
+Message & Loader component
+    created component and add it in place of loading and error
+
+6)
+Product details reducer and action
+
+    first create constants
+    create reducer productDetailsReducer
+    add it to store when we create new store it need to add in store
+    create actions
+    and from component made api call using useDispatch
+    useSelector hook takes a state from store and return new state
+
+
+
+6 Adding The shopping create
+1)
+Quantity select and add to Cart Button
+    firt we have to addd qty based on qty present in database
+    In product state add state becuase qty is component level state
+    we add qty in productScreen
+    we add option menu for selecting items and use x+1 becuase we dont want zero there
+    and add addToCartHandler to button 
+    onClick this button we use hitroy object to push url with product id and selected qty
+    we create CartScreen and add it in app.js
+    in cart path we make product id optional because of sometimes we directly go to link
+
+2)
+Cart Reducer and addToCart action
+ we crete cart reducer it takes states as cartitems array and action
+ we get item and then we check is it already present or not in cart  if exist we return state else we add item in state and then return
+ 
+action CartAction.js
+the action id and qty and callback takes dispatch method and getState because here we want to store info in localStorage
+***** getState() gives us entire state tree
+
+in store we add this info to localStorage
+
+3)
+Add to cart functionallity
+we import useEffect and all things in cartScreen.js
+
+    we take router props object like match,location and history
+    const CartScreen = ({ match, location, history }) => {
+    const productId = match.params.id
+
+    here we are retriving only quantity from query string  
+    eg qty=2 we only take 2 so we use index 1 becuase it is at index 1
+    const qty = location.search ? Number(location.search.split('=')[1]) : 1
+
+
+
